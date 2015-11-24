@@ -1,0 +1,13 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "node": true
+  },
+  "rules": {
+      "no-console": 0,
+      "no-extra-parens": 1,
+      "eqeqeq": 1,
+      "no-use-before-define": 2
+  },
+  "extends": "eslint:recommended"
+}
