@@ -13,13 +13,7 @@ describe 'yargsBuilder', ->
 
 describe 'getMethodInvocation', ->
 
-    it 'accepts alias argument', ->
-        spec = { alias: { foo: 'f' } }
-        actual = getMethodInvocation(spec)
-        expected = [ { method: 'alias', args: [ 'foo', 'f' ] } ]
-        assert.deepEqual(actual, expected)
-
-    it 'accepts multiple alias arguments', ->
+    it 'calls .alias(key, alias)', ->
         spec = { alias: { foo: 'f', bar: 'b', baz: 'B' } }
         actual = getMethodInvocation(spec)
         expected = [
@@ -29,13 +23,7 @@ describe 'getMethodInvocation', ->
         ]
         assert.deepEqual(actual, expected)
 
-    it 'accepts array argument', ->
-        spec = { array: 'foo' }
-        actual = getMethodInvocation(spec)
-        expected = [ { method: 'array', args: [ 'foo' ] } ]
-        assert.deepEqual(actual, expected)
-
-    it 'accepts multiple array arguments', ->
+    it 'calls .array(key)', ->
         spec = { array: [ 'foo', 'bar', 'baz' ] }
         actual = getMethodInvocation(spec)
         expected = [
@@ -45,7 +33,7 @@ describe 'getMethodInvocation', ->
         ]
         assert.deepEqual(actual, expected)
 
-    it 'accepts multiple boolean arguments', ->
+    it 'calls .boolean(key)', ->
         spec = { boolean: [ 'foo', 'bar', 'baz' ] }
         actual = getMethodInvocation(spec)
         expected = [
@@ -55,14 +43,14 @@ describe 'getMethodInvocation', ->
         ]
         assert.deepEqual(actual, expected)
 
-    it '.check(fn)', ->
+    it 'calls .check(fn)', ->
         fn = -> console.log('checking!')
         spec = { check: fn }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'check', args: [ fn ] } ]
         assert.deepEqual(actual, expected)
 
-    it 'accepts multiple choices arguments', ->
+    it 'calls .choices(key, choices)', ->
         spec = { choices: { foo: [ 'apples', 'oranges' ], bar: [ 'peaches', 'pears' ], baz: [ 'plums', 'mangos', 'guava' ] } }
         actual = getMethodInvocation(spec)
         expected = [
@@ -72,23 +60,23 @@ describe 'getMethodInvocation', ->
         ]
         assert.deepEqual(actual, expected)
 
-    it '.command(cmd, desc, [fn])'
+    it 'calls .command(cmd, desc)'
+    it 'calls .command(cmd, desc, fn)'
+    it 'calls .completion(cmd, [description], [fn])'
 
-    it '.completion(cmd, [description], [fn])'
-
-    it '.config(key)', ->
-        spec = { config: '~/.foo.conf' }
+    it 'calls .config(key)', ->
+        spec = { config: 'foo' }
         actual = getMethodInvocation(spec)
-        expected = [ { method: 'config', args: [ '~/.foo.conf' ] } ]
+        expected = [ { method: 'config', args: [ 'foo' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.config(key, [description])', ->
-        spec = { config: '~/.foo.conf' }
+    it 'calls .config(key, description)', ->
+        spec = { config: { foo: 'description' }}
         actual = getMethodInvocation(spec)
-        expected = [ { method: 'config', args: [ '~/.foo.conf' ] } ]
+        expected = [ { method: 'config', args: [ 'foo', 'description' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.count(key)', ->
+    it 'calls .count(key)', ->
         spec = { count: [ 'foo', 'bar', 'baz' ] }
         actual = getMethodInvocation(spec)
         expected = [
@@ -98,111 +86,132 @@ describe 'getMethodInvocation', ->
         ]
         assert.deepEqual(actual, expected)
 
-    it '.default(key, value)', ->
+    it 'calls .default(key, value)', ->
         spec = { default: { foo: 'bar' } }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'default', args: [ 'foo', 'bar' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.default(key, value, [description])'
+    it 'calls .default(key, value, description)'
 
-    it '.demand(key, [msg | boolean])'
+    it 'calls .demand(key)', ->
+        spec = { demand: [ 'foo', 'bar' ] }
+        actual = getMethodInvocation(spec)
+        expected = [
+            { method: 'demand', args: [ 'foo' ] }
+            { method: 'demand', args: [ 'bar' ] }
+        ]
+        assert.deepEqual(actual, expected)
 
-    it '.demand(count, [max], [msg])'
+    it 'calls .demand(key, [msg | boolean])', ->
+        spec = { demand: { foo: 'bar' } }
+        actual = getMethodInvocation(spec)
+        expected = [ { method: 'demand', args: [ 'foo', 'bar' ] } ]
+        assert.deepEqual(actual, expected)
 
-    it '.describe(key, desc)', ->
+    it 'calls .demand(count, [max], [msg])'
+
+    it 'calls .describe(key, desc)', ->
         spec = { describe: { foo: 'foo is awesome' } }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'describe', args: [ 'foo', 'foo is awesome' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.detectLocale(boolean)', ->
+    it 'calls .detectLocale(boolean)', ->
         spec = { detectLocale: true }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'detectLocale', args: [ true ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.epilogue(str)', ->
+    it 'calls .epilogue(str)', ->
         spec = { epilogue: 'foo bar baz' }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'epilogue', args: [ 'foo bar baz' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.epilog(str)', ->
+    it 'calls .epilog(str)', ->
         spec = { epilog: 'foo bar baz' }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'epilog', args: [ 'foo bar baz' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.example(cmd, desc)'
+    it 'calls .example(cmd, desc)', ->
+        spec = { example: { foo: 'This is a command that does things and stuff' } }
+        actual = getMethodInvocation(spec)
+        expected = [ { method: 'example', args: [ 'foo', 'This is a command that does things and stuff' ] } ]
+        assert.deepEqual(actual, expected)
 
-    it '.exitProcess(enable)', ->
+    it 'calls .exitProcess(enable)', ->
         spec = { exitProcess: true }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'exitProcess', args: [ true ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.fail(fn)', ->
+    it 'calls .fail(fn)', ->
         fn = -> console.log('fail')
         spec = { fail: fn }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'fail', args: [ fn ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.help([option, [description]])'
+    it 'calls .help([option, [description]])'
 
-    it '.implies(x, y)', ->
+    it 'calls .implies(x, y)', ->
         spec = { implies: { x: 'y' } }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'implies', args: [ 'x', 'y' ] } ]
         assert.deepEqual(actual, expected)
 
 
-    it '.locale(locale)', ->
+    it 'calls .locale(locale)', ->
         spec = { locale: 'pirate' }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'locale', args: [ 'pirate' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.nargs(key, count)'
+    it 'calls .nargs(key, count)', ->
+        spec = { nargs: { foo: 7 } }
+        actual = getMethodInvocation(spec)
+        expected = [ { method: 'nargs', args: [ 'foo', 7 ] } ]
+        assert.deepEqual(actual, expected)
 
-    it '.options(key, opt)', ->
+    it 'calls .options(key, opt)', ->
         spec = { options: { foo: { alias: 'f', type: 'boolean' } } }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'options', args: [ 'foo', { alias: 'f', type: 'boolean' } ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.require(key)', ->
+    it 'calls .require(key)', ->
         spec = { require: 'foo' }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'require', args: [ 'foo' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.require(key, [msg | boolean])', ->
+    it 'calls .require(key, [msg | boolean])', ->
         spec = { require: { foo: false } }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'require', args: [ 'foo', false ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.required(key)', ->
+    it 'calls .required(key)', ->
         spec = { required: 'foo' }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'required', args: [ 'foo' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.required(key, [msg | boolean])', ->
+    it 'calls .required(key, [msg | boolean])', ->
         spec = { required: { foo: false } }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'required', args: [ 'foo', false ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.showHelp(consoleLevel="error")', ->
+    it 'calls .showHelp(consoleLevel="error")', ->
         spec = { showHelp: 'log' }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'showHelp', args: [ 'log' ] } ]
         assert.deepEqual(actual, expected)
 
-    it '.showHelpOnFail(enable)', ->
+    it 'calls .showHelpOnFail(enable)', ->
         spec = { showHelpOnFail: true }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'showHelpOnFail', args: [ true ] } ]
