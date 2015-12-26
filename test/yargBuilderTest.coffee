@@ -167,7 +167,7 @@ describe 'getMethodInvocation', ->
     it '.nargs(key, count)'
 
     it '.options(key, opt)', ->
-        spec = { options: [ { name: 'foo', alias: 'f', type: 'boolean' } ] }
+        spec = { options: { foo: { alias: 'f', type: 'boolean' } } }
         actual = getMethodInvocation(spec)
         expected = [ { method: 'options', args: [ 'foo', { alias: 'f', type: 'boolean' } ] } ]
         assert.deepEqual(actual, expected)
