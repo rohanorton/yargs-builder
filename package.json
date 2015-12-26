@@ -1,5 +1,5 @@
 {
-  "name": "yarg-builder",
+  "name": "yargs-builder",
   "version": "0.0.0",
   "description": "Use yargs more declaratively",
   "main": "lib/yargBuilder.js",
