@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rohanorton/yarg-builder.git"
+    "url": "git+https://github.com/rohanorton/yargs-builder.git"
   },
   "author": "Rohan Orton",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rohanorton/yarg-builder/issues"
+    "url": "https://github.com/rohanorton/yargs-builder/issues"
   },
-  "homepage": "https://github.com/rohanorton/yarg-builder#readme",
+  "homepage": "https://github.com/rohanorton/yargs-builder#readme",
   "devDependencies": {
     "babel-cli": "^6.1.18",
     "babel-core": "^6.2.1",
