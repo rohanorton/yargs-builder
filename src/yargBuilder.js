@@ -1,39 +1,42 @@
 import Yargs from 'yargs';
 import { map, reduce, isPlainObject, has } from 'lodash';
+import assert from 'assert';
 
-let toArray = (x) => [].concat(x);
+const toArray = (x) => [].concat(x);
 
-let objectToArgs = (method, obj) =>
+const objectToArgs = (method, obj) =>
     map(obj, (val, key) => ({ method, args: [ key, val ] }))
 
-let valsToArgs = (method, vals) =>
+const valsToArgs = (method, vals) =>
     map(toArray(vals), (val) => ({ method, args: [ val ] }))
 
-let isConditional = (obj) =>
+const isConditional = (obj) =>
     isPlainObject(obj) && has(obj, 'condition') && has(obj, 'message');
 
-let toConditionalArgs = (method, { condition, message }) =>
+const toConditionalArgs = (method, { condition, message }) =>
     ({ method, args: [ condition, message ] })
 
-let createArgs = (key, val) => {
+const createArgs = (key, val) => {
     if (isConditional(val)) return toConditionalArgs(key, val);
     if (isPlainObject(val)) return objectToArgs(key, val);
     /* default */           return valsToArgs(key, val);
 }
 
-let collectArgs = (coll, val, key) =>
+const collectArgs = (coll, val, key) =>
     coll.concat(createArgs(key, val));
 
-let getMethodInvocation = (spec) =>
+const getMethodInvocation = (spec) =>
     reduce(spec, collectArgs, []);
 
-let invoke = (fn) =>
-    ({ method, args }) =>
-        fn[method](...args)
 
-let yargBuilder = (spec = {}, argv = process.argv.slice(2), yargs = Yargs) =>
+const invoke = (fn, { method, args }) => {
+    assert(fn[method], 'Yargs does not have method ' + method);
+    return fn[method](...args)
+}
+
+const yargBuilder = (spec = {}, argv = process.argv.slice(2), yargs = Yargs) =>
     reduce(getMethodInvocation(spec),
-           invoke(yargs),
+           invoke,
            yargs(argv));
 
 export default yargBuilder;
